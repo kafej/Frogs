@@ -1,0 +1,15 @@
+There is still a lot to do, but time was limited. To be honest, I was so absorbed, that I used something about 2 hours. Then I realized that it's already after time, sorry for that.
+
+I changed textContent to textContent for cross-browsing.
+
+In normal situation I probably try to use jQuery to complete this kind of task, but I can code it, in pure JavaScript
+
+There is a lot of alerts to check everything.
+
+Things to do on start when upgrading (only first thoughts, when coding):
+- better how many childrens algorithm
+- to kill error msg when id frog above max array id
+- better male or female algorithm
+- check if provided by user name is male or female
+- changing "kill" button with "x" button on each frog
+- change name of each frog after clicking it

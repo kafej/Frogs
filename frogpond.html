@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+  html, body { font-size: 16px; }
+  .frogPond { background-color: #0071b9; margin: 1em; padding: 1em; border: 0.125em solid aqua; border-radius: 0.5em; }
+  .frogPond h1 { text-align: center; }
+  .frogPond .actions { margin: 1em 0 0 0; padding: 0; }
+  .frogPond .actions button { display: inline-block; margin: 0 0.75em 0 0; background-color: aqua; border: 0.125em solid darkblue; padding: 0.25em; border-radius: 0.25em; font-size: 0.75em; cursor: pointer; }
+  .frogPond .frogs { border: 0.25em solid aqua; border-radius: 0.5em; margin: 0; padding: 0; }
+  .frogPond .frogs li { margin: 1em; padding: 0.25em; list-style: none; font-weight: bold; font-size: 1em; border-radius: 0.25em; }
+  .frogPond .m { color: darkblue; background-color: #1182ca; }
+  .frogPond .f { color: hotpink; background-color: #ffcccc; }
+</style>
+  
+<body> 
+<script>
+var performActions = function(e) { // Helper function for clicking buttons
+        switch(e.target.className) {
+          case 'add':
+            console.log('you hit add');
+            //get name and gender
+            addfrogclicked();
+
+            break;
+            
+          case 'kill':
+            console.log('you hit kill');
+            killfrogclicked();
+            break;
+            
+          case 'breed':
+            console.log('you hit breed');
+            breadfrogs();
+            break;
+        }
+      },
+    
+    Pond = function() { this.create(); };
+    Pond.prototype = function() {
+      var _body,
+          _frogs,
+          _actions, /* DOM element holders */
+
+          _pond,    /* reference to self */
+          Frogs,    /* Frogs in Pond */
+          
+          create = function() {
+            /* Set up DOM */
+            _body = document.createElement('div');
+            _body.className = 'frogPond';
+            _body.innerHTML = '<ul class="frogs"></ul><div class="actions"><button class="add">Add a Frog</button><button class="kill">Kill a frog</button><button class="breed">Encourage breeding</button></div>';
+            document.body.appendChild(_body);
+            _frogs = _body.getElementsByClassName('frogs')[0];
+            _actions = _body.getElementsByClassName('actions')[0];
+            /* End DOM Setup */
+
+            this.Frogs = [];
+            _pond = this;
+            
+            _actions.addEventListener('click', function(e) { performActions.call(_pond, e); }, false);
+            /* perform an action on this pond only */
+          },
+          
+          add = function(frogs) { /* accepts array of frogs or single frog */
+            if(frogs) {
+              if(!frogs.propertyIsEnumerable(length) && typeof frogs.splice !== "function") {
+                frogs = [frogs];
+              }
+            }
+
+            var i = 0,
+                l = frogs.length;
+              
+            for(; i < l; i++) {
+              this.addFrog(frogs[i]);
+            }
+          },
+          
+          addFrog = function(frog) {
+            /* only frogs allowed in this pond, this is a speciesist pond */
+            if(frog instanceof Frog) {
+              frog.setId(this.Frogs[this.Frogs.length - 1] ? this.Frogs[this.Frogs.length - 1].getId() + 1 : 1);
+              this.Frogs.push(frog);
+              
+              var _el = document.createElement('li');
+              _el.textContent = frog.name; //textContent for cross-browsing
+              _el.className = frog.gender;
+              _el.setAttribute('data-frogid', frog.getId());
+              _frogs.appendChild(_el);
+            }
+          };
+      
+      return { create: create, add: add, addFrog: addFrog };
+    }(),
+
+    Frog = function(data) { this.birth(data); };
+    Frog.prototype = function() {
+      var _id,
+          name,
+          gender,
+          
+          birth = function(frogData) {
+            this.name = frogData.name;
+            this.gender = frogData.gender;
+          },
+          
+          setId = function(id) {
+            _id = parseInt(id);
+          },
+
+          getId = function() {
+            return _id;
+          };
+      
+      return { birth: birth, setId: setId, getId: getId };
+    }();
+    //function to create frog
+    function addfrogclicked() {
+      var frogname = prompt('New Frog Name:','');
+      if (frogname != null && frogname != "") {
+        // alert(frogname);
+        var g;
+        var text = confirm("Male ?");
+
+        if (text == true){
+          g = "m";
+        }else {
+          g = "f";
+        }
+
+        frogPond.add([new Frog({ name: frogname, gender: g })]);
+      }else{
+        alert('Something goes wrong');
+      }
+    }
+    //function to kill frog
+    function killfrogclicked() {
+      var frogidin = prompt('The number of frog to kill?:','');
+      if (frogidin != null && frogidin != "") {
+        // alert(frogidin);
+        
+        // find and remove frog
+        var finalid = frogidin -1;
+        // alert(finalid);
+        var list = document.getElementsByTagName('li');
+        var who = list[finalid];
+        who.parentNode.removeChild(who);
+      }else {
+        alert('Something goes wrong');
+      }
+    }
+    //function to bread frogs
+    //It's only one case - male frog can produce new children with every available female frog.
+    function breadfrogs() {
+      // get numbers of male frogs
+      var male = document.getElementsByClassName('m');
+      var m = male.length;
+      // alert(m);
+      
+      //Main if
+      if (m >= 1) {
+        // get numbers of female frogs and reproduce
+        var female = document.getElementsByClassName('f');
+        var f = female.length;
+        // alert(f);
+        // 
+        //famele is here ?
+        if (f >= 1) {
+          // simple probability male or famele
+          // simple array with names and randomize
+          var malesname = new Array(
+            'John',
+            'Josh',
+            'Michael'
+          );
+          var femalesname = new Array(
+            'Cara',
+            'Ella',
+            'Gaby'
+          );
+          var probability = Math.floor((Math.random()*10)+1);
+          var genders = '';
+          var frognamebygender = '';
+          if (probability >= 5 && probability <= 10) {
+            genders = 'm';
+            frognamebygender = malesname[Math.floor(Math.random() * malesname.length)];
+          }else{
+            genders = 'f';
+            frognamebygender = femalesname[Math.floor(Math.random() * femalesname.length)];
+          }
+          // alert(genders);
+          // alert(frognamebygender);
+
+          // new childs
+          for (var i = 0; i < f; i++) {
+            frogPond.add([new Frog({ name: frognamebygender, gender: genders })]);
+          }
+        
+        }else {
+          alert('No female');
+        }
+      }else {
+        alert('No male to do the job');
+      }
+    }
+  var frogPond = new Pond();
+  frogPond.add([
+    new Frog({ name: "Frank", gender: "m" }),
+    new Frog({ name: "Georgia", gender: "f" })
+]);
+</script>
+
+</body>
+</html>
